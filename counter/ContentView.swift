@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+//    @State var isSave = true
+    @State var showSettings = false
+    @State var opacity: Double = 0
+    @State var CounterData = defaultCounter
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        ZStack {
+            AStack(spacing: 0) {
+                CounterBlock(value: $CounterData[0])
+                CounterBlock(value: $CounterData[1])
+            }
+            Settings(
+//                isSave: $isSave,
+                data: $CounterData)
+                .opacity(opacity)
+            Toolbar(showSettings: $showSettings, opacity: $opacity, data: $CounterData)
         }
-        .padding()
     }
 }
 
