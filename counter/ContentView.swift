@@ -9,21 +9,25 @@ import SwiftUI
 
 struct ContentView: View {
 //    @State var isSave = true
-    @State var showSettings = false
+    @ObservedObject var CounterData = Counter()
     @State var opacity: Double = 0
-    @State var CounterData = defaultCounter
+    @State var SettingsValue = SettingsData()
     
     var body: some View {
         ZStack {
             AStack(spacing: 0) {
-                CounterBlock(value: $CounterData[0])
-                CounterBlock(value: $CounterData[1])
+                ForEach($CounterData.CounterData) { $ct in
+                    CounterBlock(value: $ct, settings: $SettingsValue)
+                }
             }
             Settings(
 //                isSave: $isSave,
-                data: $CounterData)
+                settings: $SettingsValue, data: $CounterData.CounterData)
                 .opacity(opacity)
-            Toolbar(showSettings: $showSettings, opacity: $opacity, data: $CounterData)
+            Toolbar(opacity: $opacity, data: $CounterData.CounterData, settings: $SettingsValue)
+            if((SettingsValue.winner) != nil) {
+                WinView(winner: $SettingsValue.winner, reset: CounterData.reset)
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Settings: View {
 //    @Binding var isSave: Bool
+    @Binding var settings: SettingsData
     @Binding var data: [CounterValue]
     
     var body: some View {
@@ -17,6 +18,9 @@ struct Settings: View {
 //            Toggle(isOn: $isSave, label: {
 //                Text("Save Score")
 //            })
+            Toggle(isOn: settings.$pingPongMode, label: {
+                Text("Ping Pong Mode")
+            })
             ColorPicker(selection: $data[0].bgColor, supportsOpacity: false, label: {
                 Text("First Player Color")
             })
@@ -36,6 +40,6 @@ struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         Settings(
 //            isSave: .constant(true),
-                 data: .constant(defaultCounter))
+            settings: .constant(SettingsData()), data: .constant(defaultCounter))
     }
 }

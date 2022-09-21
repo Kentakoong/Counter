@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct Toolbar: View {
-    @Binding var showSettings: Bool
     @Binding var opacity: Double
     @Binding var data: [CounterValue]
+    @Binding var settings: SettingsData
     
     func resetScore() {
         data = defaultCounter
@@ -22,15 +22,15 @@ struct Toolbar: View {
                 resetScore()
             }, label: {
                 Text("Reset")
+                    .padding()
+                    .frame(maxHeight: 40)
+                    .foregroundColor(Color.black)
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .shadow(radius: 5)
             })
-            .padding()
-            .frame(maxHeight: 40)
-            .foregroundColor(Color.black)
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(radius: 5)
             Button(action: {
-                showSettings.toggle()
+                settings.showSettings.toggle()
                 withAnimation(.easeInOut(duration: 0.1)) {
                     if(opacity == 0) {
                         opacity = 1
@@ -40,15 +40,15 @@ struct Toolbar: View {
                 }
             }, label: {
                 Image(systemName:
-                        showSettings ? "xmark" : "gearshape.fill")
+                        settings.showSettings ? "xmark" : "gearshape.fill")
                 .resizable()
                 .foregroundColor(Color.black)
-                .padding(!showSettings ? 8 : 10)
+                .padding(!settings.showSettings ? 8 : 10)
                 .background(Color.white)
+                .frame(maxWidth: 40, maxHeight: 40)
+                .clipShape(Circle())
+                .shadow(radius: 5)
             })
-            .frame(maxWidth: 40, maxHeight: 40)
-            .clipShape(Circle())
-            .shadow(radius: 5)
         }
         .padding(20)
         .ignoresSafeArea()
@@ -58,6 +58,6 @@ struct Toolbar: View {
 
 struct Toolbar_Previews: PreviewProvider {
     static var previews: some View {
-        Toolbar(showSettings: .constant(false), opacity: .constant(0), data: .constant(defaultCounter))
+        Toolbar(opacity: .constant(0), data: .constant(defaultCounter), settings: .constant(SettingsData()))
     }
 }
