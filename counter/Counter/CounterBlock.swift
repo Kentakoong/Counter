@@ -10,6 +10,7 @@ import SwiftUI
 struct CounterBlock: View {
     @Binding var value: CounterValue
     @Binding var settings: SettingsData
+    @State var isLongPress = false
     
     func calcColor() -> Color {
         var gs: CGFloat = 0
@@ -23,6 +24,10 @@ struct CounterBlock: View {
     
     var body: some View {
         Button(action: {
+            if(self.isLongPress) {
+                isLongPress = false
+                return
+            }
             value.score += 1
             if(settings.pingPongMode && value.score >= 11) {
                 settings.setWinState(value: value)
@@ -35,6 +40,14 @@ struct CounterBlock: View {
                 .background(value.bgColor)
                 .foregroundColor(calcColor())
         }).disabled((settings.winner != nil) ? true : false)
+            .simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.25).onEnded({_ in
+                    isLongPress = true
+                    if value.score > 0 {
+                        value.score -= 1
+                    }
+                })
+            )
     }
 }
 
