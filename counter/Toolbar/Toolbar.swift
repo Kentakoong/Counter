@@ -10,7 +10,11 @@ import SwiftUI
 struct Toolbar: View {
     @Binding var opacity: Double
     @Binding var data: [CounterValue]
-    @Binding var settings: SettingsData
+    @Binding var showSettings: Bool
+    @Binding var dealAvailable: Bool
+    @Binding var pingPongMode: Bool
+    
+    var addDeal: () -> Void
     
     func resetScore() {
         data = defaultCounter
@@ -18,9 +22,22 @@ struct Toolbar: View {
     
     var body: some View {
         HStack(spacing: 15) {
-            Button(action: {
-                resetScore()
-            }, label: {
+            if(dealAvailable && pingPongMode) {
+                Button(action: {
+                    addDeal()
+                    dealAvailable = false
+                    print(dealAvailable)
+                }, label: {
+                    Text("Deal!")
+                        .padding()
+                        .frame(maxHeight: 40)
+                        .foregroundColor(Color.black)
+                        .background(Color.white)
+                        .cornerRadius(20)
+                        .shadow(radius: 5)
+                })
+            }
+            Button(action: resetScore, label: {
                 Text("Reset")
                     .padding()
                     .frame(maxHeight: 40)
@@ -30,7 +47,7 @@ struct Toolbar: View {
                     .shadow(radius: 5)
             })
             Button(action: {
-                settings.showSettings.toggle()
+                showSettings.toggle()
                 withAnimation(.easeInOut(duration: 0.1)) {
                     if(opacity == 0) {
                         opacity = 1
@@ -40,10 +57,10 @@ struct Toolbar: View {
                 }
             }, label: {
                 Image(systemName:
-                        settings.showSettings ? "xmark" : "gearshape.fill")
+                        showSettings ? "xmark" : "gearshape.fill")
                 .resizable()
                 .foregroundColor(Color.black)
-                .padding(!settings.showSettings ? 8 : 10)
+                .padding(!showSettings ? 8 : 10)
                 .background(Color.white)
                 .frame(maxWidth: 40, maxHeight: 40)
                 .clipShape(Circle())
@@ -58,6 +75,6 @@ struct Toolbar: View {
 
 struct Toolbar_Previews: PreviewProvider {
     static var previews: some View {
-        Toolbar(opacity: .constant(0), data: .constant(defaultCounter), settings: .constant(SettingsData()))
+        Toolbar(opacity: .constant(0), data: .constant(defaultCounter), showSettings: .constant(true), dealAvailable: .constant(true), pingPongMode: .constant(true), addDeal: {print("addDeal")})
     }
 }

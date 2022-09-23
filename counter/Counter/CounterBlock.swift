@@ -9,8 +9,12 @@ import SwiftUI
 
 struct CounterBlock: View {
     @Binding var value: CounterValue
-    @Binding var settings: SettingsData
-    @State var isLongPress = false
+    @Binding var winner: WinState?
+    @Binding var winScore: Int?
+    @State private var isLongPress = false
+    
+    var setWin: (_ value: CounterValue) -> Void
+    var checkDeal: (_ winScore: Int) -> Void
     
     func calcColor() -> Color {
         var gs: CGFloat = 0
@@ -29,8 +33,9 @@ struct CounterBlock: View {
                 return
             }
             value.score += 1
-            if(settings.pingPongMode && value.score >= 11) {
-                settings.setWinState(value: value)
+            checkDeal(winScore!)
+            if((winScore != nil) && value.score >= winScore!) {
+                setWin(value)
                 return
             }
         }, label: {
@@ -39,7 +44,7 @@ struct CounterBlock: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(value.bgColor)
                 .foregroundColor(calcColor())
-        }).disabled((settings.winner != nil) ? true : false)
+        }).disabled((winner != nil) ? true : false)
             .simultaneousGesture(
                 LongPressGesture(minimumDuration: 0.25).onEnded({_ in
                     isLongPress = true
@@ -53,6 +58,9 @@ struct CounterBlock: View {
 
 struct CounterBlock_Previews: PreviewProvider {
     static var previews: some View {
-        CounterBlock(value: .constant(CounterValue(id: 0, score: 0, bgColor: Color.red)), settings: .constant(SettingsData()))
+        CounterBlock(value: .constant(defaultCounter[0]),
+                     winner: .constant(WinState(player: 1, color: Color.white)),
+                     winScore: .constant(13),
+                     setWin: {_ in print("setWin")}, checkDeal: {_ in print("checkDeal")})
     }
 }

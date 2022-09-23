@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WinView: View {
     @Binding var winner: WinState?
+    @Binding var winScore: Int?
+    
     var reset: () -> Void
     
     var body: some View {
@@ -27,6 +29,7 @@ struct WinView: View {
         .background(.regularMaterial)
         .onTapGesture {
             winner = nil
+            winScore = nil
             reset()
         }
     }
@@ -34,6 +37,6 @@ struct WinView: View {
 
 struct WinView_Previews: PreviewProvider {
     static var previews: some View {
-        WinView(winner: .constant(WinState(player: 1, color: Color.blue)), reset: Counter().reset)
+        WinView(winner: .constant(WinState(player: 1, color: Color.blue)), winScore: .constant(10), reset: Counter().reset)
     }
 }

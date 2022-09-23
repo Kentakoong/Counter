@@ -9,8 +9,12 @@ import SwiftUI
 
 struct Settings: View {
 //    @Binding var isSave: Bool
-    @Binding var settings: SettingsData
+    @Binding var pingPongMode: Bool
     @Binding var data: [CounterValue]
+    @Binding var winScore: Int?
+    
+    var setPingPongMode: () -> Void
+    var checkDeal: (_ winScore: Int) -> Void
     
     var body: some View {
         VStack(spacing: 20) {
@@ -18,9 +22,13 @@ struct Settings: View {
 //            Toggle(isOn: $isSave, label: {
 //                Text("Save Score")
 //            })
-            Toggle(isOn: settings.$pingPongMode, label: {
+            Toggle(isOn: self.$pingPongMode, label: {
                 Text("Ping Pong Mode")
-            })
+            }).onChange(of: pingPongMode) { _ in
+                setPingPongMode()
+                checkDeal(winScore!)
+                
+            }
             ColorPicker(selection: $data[0].bgColor, supportsOpacity: false, label: {
                 Text("First Player Color")
             })
@@ -40,6 +48,6 @@ struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         Settings(
 //            isSave: .constant(true),
-            settings: .constant(SettingsData()), data: .constant(defaultCounter))
+            pingPongMode: .constant(true), data: .constant(defaultCounter), winScore: .constant(0), setPingPongMode: { print("Test") }, checkDeal: { _ in print("Hello") })
     }
 }
